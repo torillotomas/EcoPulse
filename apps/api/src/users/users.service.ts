@@ -18,4 +18,8 @@ export class UsersService {
         return { id: saved.id, email: saved.email, name: saved.name };
     }
 
+    async findByEmail(email: string) {
+        return this.repo.findOne({ where: { email } });
+    }
+
 }
