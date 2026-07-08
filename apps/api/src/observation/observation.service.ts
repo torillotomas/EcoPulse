@@ -32,4 +32,28 @@ export class ObservationService {
             user: { id: userId } as User,
         } as Observation;
     }
+
+    async findAll(): Promise<ObservationSummary[]> {
+        return this.repo.createQueryBuilder('observation')
+            .leftJoin('observation.user', 'user')
+            .select([
+                'observation.id AS id',
+                'observation.species AS species',
+                'observation.imageUrl AS "imageUrl"',
+                'ST_AsGeoJSON(observation.location) AS location',
+                'observation.createdAt AS "createdAt"',
+                'user.name AS username',
+            ])
+            .getRawMany<ObservationSummary>();
+    }
 }
+
+export interface ObservationSummary {
+    id: string;
+    species: string;
+    imageUrl: string;
+    location: string;
+    createdAt: Date;
+    username: string;
+}
+
