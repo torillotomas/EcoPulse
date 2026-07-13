@@ -2,7 +2,7 @@
 
 Red de observaciones de fauna urbana en CABA (Buenos Aires): la gente sube fotos de animales que ve en la ciudad (aves, mascotas ferales, fauna silvestre ocasional), un modelo de IA identifica automáticamente qué es, aparece en un mapa en tiempo real, y se cruza con datos abiertos de biodiversidad de la zona (GBIF, eBird).
 
-> 🚧 **Proyecto en desarrollo activo.** Hay login con JWT funcionando, y el modelo `Observation` (con ubicación geográfica vía PostGIS) ya permite crear observaciones autenticadas y listarlas públicamente. Todavía no hay mapa en el frontend, identificación por IA ni tiempo real — eso viene en las próximas semanas.
+> 🚧 **Proyecto en desarrollo activo.** Login con JWT, creación autenticada de observaciones con ubicación PostGIS, listado público, y ya hay un mapa estático en el frontend (React + react-leaflet) mostrando las observaciones sobre CABA. Todavía no hay identificación por IA ni tiempo real — eso viene en las próximas semanas.
 
 ## Arquitectura
 
@@ -65,7 +65,7 @@ npm run dev
 
 ## Roadmap
 
-1. **Semana 1-2**: ✅ login real (JWT) + ✅ CRUD de observaciones (creación autenticada, listado público con PostGIS) — falta el mapa estático en el frontend.
+1. **Semana 1-2**: ✅ login real (JWT) + ✅ CRUD de observaciones (creación autenticada, listado público con PostGIS) + ✅ mapa estático en el frontend con react-leaflet.
 2. **Semana 3**: cola + worker de IA para identificación automática.
 3. **Semana 4**: tiempo real — el mapa se actualiza en vivo.
 4. **Semana 5**: observabilidad (logging, error tracking) + seguridad (rate limiting, validación de uploads).
