@@ -16,7 +16,6 @@ export class ObservationService {
             .insert()
             .into(Observation)
             .values({
-                species: dto.species,
                 imageUrl: dto.imageUrl,
                 user: { id: userId },
                 location: () => `ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)`,
@@ -43,6 +42,8 @@ export class ObservationService {
                 'ST_AsGeoJSON(observation.location) AS location',
                 'observation.createdAt AS "createdAt"',
                 'user.name AS username',
+                'observation.status AS status',
+
             ])
             .getRawMany<ObservationSummary>();
     }
@@ -50,10 +51,11 @@ export class ObservationService {
 
 export interface ObservationSummary {
     id: string;
-    species: string;
+    species: string | null;
     imageUrl: string;
     location: string;
     createdAt: Date;
     username: string;
+    status: 'pending' | 'processed' | 'failed';
 }
 

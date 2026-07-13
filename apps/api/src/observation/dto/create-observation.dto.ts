@@ -1,9 +1,6 @@
-import { IsString, IsLatitude, IsLongitude, IsUrl, MinLength } from 'class-validator';
+import { IsLatitude, IsLongitude, IsUrl } from 'class-validator';
 
 export class CreateObservationDto {
-    @IsString()
-    @MinLength(2)
-    species!: string;
 
     @IsLatitude()
     latitude!: number;
