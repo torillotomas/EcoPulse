@@ -1,11 +1,10 @@
-import { Controller, Post, Body, UseGuards, Req, Get } from "@nestjs/common";
-import { ObservationService } from "./observation.service";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { CreateObservationDto } from "./dto/create-observation.dto";
-import { ObservationSummary } from "./observation.service";
+import { Controller, Post, Body, UseGuards, Req, Get } from '@nestjs/common';
+import { ObservationService } from './observation.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CreateObservationDto } from './dto/create-observation.dto';
+import { ObservationSummary } from './observation.service';
 
-
-@Controller("observations")
+@Controller('observations')
 export class ObservationController {
   constructor(private readonly observationService: ObservationService) {}
 
@@ -21,4 +20,3 @@ export class ObservationController {
     return this.observationService.create(dto, userId);
   }
 }
-

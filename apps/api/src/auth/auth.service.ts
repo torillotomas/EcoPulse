@@ -13,7 +13,10 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
     const hashedPassword = user?.passwordHash;
-    const credentialsOk = user && hashedPassword && (await bcrypt.compare(password, hashedPassword));
+    const credentialsOk =
+      user &&
+      hashedPassword &&
+      (await bcrypt.compare(password, hashedPassword));
 
     if (!credentialsOk) {
       throw new UnauthorizedException('Credenciales Invalidas');
@@ -30,4 +33,3 @@ export class AuthService {
     return { access_token };
   }
 }
-    

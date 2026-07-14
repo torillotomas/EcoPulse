@@ -1,13 +1,12 @@
 import { IsLatitude, IsLongitude, IsUrl } from 'class-validator';
 
 export class CreateObservationDto {
+  @IsLatitude()
+  latitude!: number;
 
-    @IsLatitude()
-    latitude!: number;
+  @IsLongitude()
+  longitude!: number;
 
-    @IsLongitude()
-    longitude!: number;
-
-    @IsUrl()
-    imageUrl!: string;
+  @IsUrl()
+  imageUrl!: string;
 }

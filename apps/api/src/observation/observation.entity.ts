@@ -1,41 +1,45 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
 import { User } from '../users/user.entity';
 
 enum ObservationStatus {
-    PENDING = 'pending',
-    PROCESSED = 'processed',
-    FAILED = 'failed',
+  PENDING = 'pending',
+  PROCESSED = 'processed',
+  FAILED = 'failed',
 }
 
 @Entity()
 export class Observation {
-    @PrimaryGeneratedColumn('uuid')
-    id!: string;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-    @ManyToOne(() => User)
-    user!: User;
+  @ManyToOne(() => User)
+  user!: User;
 
-    @Column({type: 'text', nullable: true})
-    species!: string | null;
+  @Column({ type: 'text', nullable: true })
+  species!: string | null;
 
-    @Column('text')
-    imageUrl!: string;
+  @Column('text')
+  imageUrl!: string;
 
-    @Column({ type: 'geography', spatialFeatureType: 'Point', srid: 4326 })
-    location!: string;
+  @Column({ type: 'geography', spatialFeatureType: 'Point', srid: 4326 })
+  location!: string;
 
-    @CreateDateColumn()
-    createdAt!: Date;
+  @CreateDateColumn()
+  createdAt!: Date;
 
-    @Column({ type: 'float', nullable: true })
-    confidenceScore!: number | null;
+  @Column({ type: 'float', nullable: true })
+  confidenceScore!: number | null;
 
-    @Column({
-        type: 'enum',
-        enum: ObservationStatus,
-        default: ObservationStatus.PENDING,
-    })
-    status!: ObservationStatus;
+  @Column({
+    type: 'enum',
+    enum: ObservationStatus,
+    default: ObservationStatus.PENDING,
+  })
+  status!: ObservationStatus;
 }
-
-
