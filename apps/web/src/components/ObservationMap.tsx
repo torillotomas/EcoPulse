@@ -5,7 +5,11 @@ import "leaflet/dist/leaflet.css";
 type Observation = {
     id: string;
     location: string;
-    species: string;
+    commonName: string | null;
+    scientificName: string | null;
+    group: string | null;
+    description: string | null;
+    status: 'pending' | 'processed' | 'failed';
     imageUrl: string;
     username: string;
     createdAt: string;
@@ -15,6 +19,24 @@ const parseLocation = (locationString: string): { lat: number; lng: number } => 
     const geoJson = JSON.parse(locationString);
     const [lng, lat] = geoJson.coordinates;
     return { lat, lng };
+};
+
+const getTitle = (observation: Observation): string => {
+    const name = observation.commonName || observation.scientificName;
+
+    if (observation.status === "failed") {
+        return "Error técnico al procesar la observación";
+    }
+
+    if (observation.status === "pending") {
+        return name ? `En revisión: ${name}` : "En revisión";
+    }
+
+    if (observation.status === "processed" && !name) {
+        return "Procesado: no se pudo identificar";
+    }
+
+    return name || "Observación sin nombre";
 };
 
 const ObservationMap = () => {
@@ -49,9 +71,9 @@ const ObservationMap = () => {
                     <Marker key={observation.id} position={[lat, lng]}>
                         <Popup>
                             <div>
-                                <h3>{observation.species}</h3>
+                                <h3>{getTitle(observation)}</h3>
                                 <p>{observation.username}</p>
-                                <img src={observation.imageUrl} alt={observation.species} />
+                                <img src={observation.imageUrl} alt={observation.commonName || observation.scientificName || "Observation"} />
                                 <p>{new Date(observation.createdAt).toLocaleDateString()}</p>
                             </div>
                         </Popup>

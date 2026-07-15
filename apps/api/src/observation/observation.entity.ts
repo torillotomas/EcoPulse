@@ -22,7 +22,16 @@ export class Observation {
   user!: User;
 
   @Column({ type: 'text', nullable: true })
-  species!: string | null;
+  commonName!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  scientificName!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  group!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  description!: string | null;
 
   @Column('text')
   imageUrl!: string;

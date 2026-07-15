@@ -52,7 +52,10 @@ export class ObservationService {
       .leftJoin('observation.user', 'user')
       .select([
         'observation.id AS id',
-        'observation.species AS species',
+        'observation.commonName AS "commonName"',
+        'observation.scientificName AS "scientificName"',
+        'observation.group AS "group"',
+        'observation.description AS "description"',
         'observation.imageUrl AS "imageUrl"',
         'ST_AsGeoJSON(observation.location) AS location',
         'observation.createdAt AS "createdAt"',
@@ -65,7 +68,10 @@ export class ObservationService {
 
 export interface ObservationSummary {
   id: string;
-  species: string | null;
+  commonName: string | null;
+  scientificName: string | null;
+  group: string | null;
+  description: string | null;
   imageUrl: string;
   location: string;
   createdAt: Date;
