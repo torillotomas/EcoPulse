@@ -56,7 +56,47 @@ const ObservationMap = () => {
             }
         };
 
+        const eventSource = new EventSource("http://localhost:3000/realtime/events");
+
+        eventSource.onmessage = (event) => {
+            try {
+                const wrapper = JSON.parse(event.data);
+                const payload = JSON.parse(wrapper.payload);
+
+                const nuevaObservacion: Observation = {
+                    id: payload.observationId,
+                    location: payload.location,
+                    commonName: payload.commonName ?? null,
+                    scientificName: payload.scientificName ?? null,
+                    group: payload.group ?? null,
+                    description: payload.description ?? null,
+                    status: (payload.status as Observation["status"]) ?? "pending",
+                    imageUrl: payload.imageUrl ?? "",
+                    username: payload.username ?? "",
+                    createdAt: payload.createdAt ?? new Date().toISOString(),
+                };
+
+                setObservations((prev) => {
+                    const existingIndex = prev.findIndex((observation) => observation.id === nuevaObservacion.id);
+
+                    if (existingIndex >= 0) {
+                        const updated = [...prev];
+                        updated[existingIndex] = nuevaObservacion;
+                        return updated;
+                    }
+
+                    return [...prev, nuevaObservacion];
+                });
+            } catch (error) {
+                console.error("Failed to parse realtime payload", error);
+            }
+        };
+
         fetchObservations();
+
+        return () => {
+            eventSource.close();
+        };
     }, []);
 
     return (

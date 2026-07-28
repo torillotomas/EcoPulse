@@ -7,11 +7,13 @@ import { UserModule } from './users/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ObservationModule } from './observation/observation.module';
 import { BullModule } from '@nestjs/bullmq';
+import { RealtimeModule } from './realtime/realtime.module';
 
 @Module({
   imports: [
     UserModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    RealtimeModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

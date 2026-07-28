@@ -4,10 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ObservationService } from './observation.service';
 import { ObservationController } from './observation.controller';
 import { BullModule } from '@nestjs/bullmq';
+import { User } from '../users/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Observation]),
+    TypeOrmModule.forFeature([Observation, User]),
     BullModule.registerQueue({
       name: 'observation-queue',
     }),

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observation } from './observation.entity';
 import { User } from '../users/user.entity';
@@ -12,6 +12,7 @@ import { Queue } from 'bullmq';
 export class ObservationService {
   constructor(
     @InjectRepository(Observation) private repo: Repository<Observation>,
+    @InjectRepository(User) private userRepo: Repository<User>,
     @InjectQueue('observation-queue') private queue: Queue
   ) {}
 
@@ -19,6 +20,11 @@ export class ObservationService {
     dto: CreateObservationDto,
     userId: string,
   ): Promise<Observation> {
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`User ${userId} not found`);
+    }
+
     const result = await this.repo
       .createQueryBuilder()
       .insert()
@@ -39,9 +45,11 @@ export class ObservationService {
       user: { id: userId } as User,
     } as Observation;
 
-    await this.queue.add('process-observation', {
-      observationId: row.id,
-    });
+    await this.queue.add(
+      'process-observation',
+      { observationId: row.id, username: user.name },
+      { attempts: 3, backoff: { type: 'exponential', delay: 1000 }, removeOnFail: false }
+    );
 
     return row;
   }
