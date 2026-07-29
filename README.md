@@ -2,7 +2,7 @@
 
 Red de observaciones de fauna urbana en CABA (Buenos Aires): la gente sube fotos de animales que ve en la ciudad (aves, mascotas ferales, fauna silvestre ocasional), un modelo de IA identifica automáticamente qué es, aparece en un mapa en tiempo real, y se cruza con datos abiertos de biodiversidad de la zona (GBIF, eBird).
 
-> 🚧 **Proyecto en desarrollo activo.** Login con JWT, creación autenticada de observaciones con ubicación PostGIS, listado público, cola de procesamiento (BullMQ) con un worker en Python que identifica la fauna con Gemini, y el mapa (React + react-leaflet) ya se actualiza **en vivo** vía Server-Sent Events cuando una observación termina de procesarse — sin recargar la página. Todavía falta: carga real de imagen desde el frontend (hoy se pega una URL a mano), pantallas de login/registro, validación robusta de uploads, observabilidad, tests e2e e infraestructura como código.
+> 🚧 **Proyecto en desarrollo activo.** Login con JWT, creación autenticada de observaciones con ubicación PostGIS, listado público, cola de procesamiento (BullMQ) con un worker en Python que identifica la fauna con Gemini, y el mapa (React + react-leaflet) ya se actualiza **en vivo** vía Server-Sent Events cuando una observación termina de procesarse — sin recargar la página. El frontend ya tiene ruteo (`react-router-dom`) con `/`, `/login` y `/register`; los formularios de login/registro reales, el estado de sesión (JWT en `localStorage` vía `zustand` + `persist`), y la carga real de imagen (hoy se pega una URL a mano) están en construcción. Todavía falta: validación robusta de uploads, observabilidad, tests e2e e infraestructura como código.
 
 ## Arquitectura
 
@@ -35,7 +35,7 @@ En paralelo, un cron job sincroniza periódicamente con APIs abiertas (GBIF, eBi
 Monorepo:
 
 - `apps/api` — API en NestJS.
-- `apps/web` — frontend en React + Vite.
+- `apps/web` — frontend en React + Vite. Páginas en `src/pages/`, componentes reutilizables en `src/components/`.
 - `apps/worker` — worker de identificación de fauna en Python.
 
 ## Levantar el proyecto en local
@@ -96,6 +96,6 @@ npm run dev
 1. **Semana 1-2**: ✅ login real (JWT) + ✅ CRUD de observaciones (creación autenticada, listado público con PostGIS) + ✅ mapa estático en el frontend con react-leaflet.
 2. **Semana 3**: ✅ cola (BullMQ) + worker en Python que identifica fauna con Gemini.
 3. **Semana 4**: ✅ tiempo real — Redis Pub/Sub + SSE + `EventSource`, el mapa se actualiza en vivo sin recargar.
-4. **Semana 4.5**: frontend a fondo — pantallas de login/registro, carga real de imagen (reemplaza pegar una URL a mano), pulido general del mapa.
+4. **Semana 4.5** (en curso): frontend a fondo — ✅ dirección de diseño y ruteo base (`react-router-dom`, estructura `pages/`), pantallas de login/registro reales (en construcción, con `zustand`+`persist` para la sesión), carga real de imagen (reemplaza pegar una URL a mano), pulido general del mapa.
 5. **Semana 5**: observabilidad (logging, error tracking) + seguridad (rate limiting, validación de uploads).
 6. **Semana 6**: tests e2e + infraestructura como código + staging/prod.

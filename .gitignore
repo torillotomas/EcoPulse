@@ -1,1 +1,11 @@
 CLAUDE.md
+PRODUCT.md
+docs/
+
+# Config local de Claude Code (permisos por máquina, no compartido)
+.claude/settings.local.json
+
+# Cruft de SO/editor
+.DS_Store
+Thumbs.db
+

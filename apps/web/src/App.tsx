@@ -1,14 +1,19 @@
-import ObservationMap from './components/ObservationMap'
-import './App.css'
+import { Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 function App() {
 
   return (
-    <div className="App">
-      <h1>EcoPulse</h1>
-      <ObservationMap />
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
   )
 }
+
+
 
 export default App
