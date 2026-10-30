@@ -2,12 +2,15 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas/authSchemas";
 import type { LoginSchemaType } from "../schemas/authSchemas";
+import { apiClient } from "../api/client";
+import { useAuthStore } from "../store/useAuthStore";
 
 export function LoginForm() {
     const {
         register,
         handleSubmit,
         formState: { errors },
+        setError,
     } = useForm({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -17,8 +20,25 @@ export function LoginForm() {
         },
     });
 
-    const onFormSubmit: SubmitHandler<LoginSchemaType> = (data) => {
-        console.log("Datos válidos enviados:", data);
+    const onFormSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
+        try {
+            const body = { email: data.email, password: data.password };
+            const response = await apiClient<{ access_token: string }>(
+                "/auth/login",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body),
+                }
+            );
+            useAuthStore.getState().login(response.access_token);
+        } catch (error) {
+            if (error instanceof Error) {
+                setError("root", { message: error.message });
+            } else {
+                setError("root", { message: "Error desconocido" });
+            }
+        }
     };
 
     return (
@@ -55,6 +75,9 @@ export function LoginForm() {
                 Recordarme en este equipo
             </label>
         </div>
+
+        {/* Errores del servidor */}
+        {errors.root?.message && <p style={{ color: "red" }}>{errors.root.message}</p>}
 
         <button type="submit">Iniciar Sesión</button>
     </form>
